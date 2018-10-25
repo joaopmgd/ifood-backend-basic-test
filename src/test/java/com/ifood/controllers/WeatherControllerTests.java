@@ -45,7 +45,7 @@ public class WeatherControllerTests {
 
     @Test
     public void verifiesTheErrorReturningFromTheRequest() throws Exception {
-        when(weatherService.GetCityWeather("London")).thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
-        this.mockMvc.perform(get("/weather").param("city", "London")).andExpect(status().isUnauthorized());
+        when(weatherService.GetCityWeather("London")).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+        this.mockMvc.perform(get("/weather").param("city", "London")).andExpect(status().isBadRequest());
     }
 }

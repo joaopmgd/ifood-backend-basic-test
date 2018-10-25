@@ -58,3 +58,33 @@ Em caso de falha... o que poderia acontecer para que o nosso endpoint não retor
 [HystrixRepo]: https://github.com/Netflix/Hystrix
 [SpringInitializr]: https://start.spring.io/
 [SpringBoot]: https://docs.spring.io/spring-boot/docs/1.5.2.RELEASE/reference/htmlsingle/#getting-started
+
+## Notas do Desenvolvedor
+
+Foram feitos dois commits, onde o primeiro satisfaz as três primeiras tarefas e o segundo adiciona o suporte ao Hystrix.
+
+### 1º Commit
+
+O "error handling" foi feito de maneira manual onde todo erro que ocorresse era passado para o usuário da API, seja erro de serviço ou propagado da chamada ao OpenWeatherAPI.
+
+O cache utilizado foi a anotação do spring, onde o retorno é salvo para um mesmo request, sendo assim eliminando a necessidade de realizar uma nova requisição igual.
+
+Token para acesso ao OpenWeather foi externalizada para o applications.properties como uma maneira de não ficar preso a um único ambiente.
+
+### 2º Commit
+
+A quarta tarefa foi implementada, que era a tolerância a falhas utilizando o Hystrix.
+
+Como o cache foi feito utilizando a anotação do Spring, preferi implementar o Hystrix de maneira manual, utilizando a dependência Hystrix-Core ao invés do seu encapsulamento do Spring Cloud.
+
+Modificar para o Hystrix do Spring Cloud traria a mesma funcionalidade mas seria muito menos verboso.
+
+A utilização do Hystrix fez com que os erros do serviço parassem de ser propagados para o usuário, assim com a implementação de um Fallback será feita uma requisição à uma outra API com funcionalidades parecidas para não deixar o cliente com uma mensagem de erro.
+
+A implementação dos Tokens para essas duas APIs(OpenWeather e Weatherbit no Fallback) foi modificada para variáveis de ambiente, assim para rodar é necessário as variáveis "OpenWeatherAppid" e "KeyWeatherbit" configuradas com seus respectivos Tokens ao iniciar a aplicação.
+
+Testes implementados verificam erros e possíveis retornos. Para passar em todos os testes as variáveis de ambiente com os Tokens devem ser configuradas novamente, o teste "verifiesTheReturnOfAbout"em "DemoApplicationTests" faz uma chamada as APIs como teste de integração.
+
+Caso seja necessário, meus tokens são das duas APIs estão no Dockerfile no container de build e no container de Run, ambos possuem categoria gratuita de utilização.
+
+WeatherBit é uma API que será o Fallback da OpenWeather, ou seja, só será chamada caso a primeira falhe, assim concluímos que ela não é ótima, não é tão rápida e não possui todos os dados necessários, mas retorna o suficiente para não deixar o usuário com erros.

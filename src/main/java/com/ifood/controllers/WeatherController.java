@@ -1,6 +1,5 @@
 package com.ifood.controllers;
 
-import com.google.gson.Gson;
 import com.ifood.domain.CityWeather;
 import com.ifood.domain.loggerError.LogInformation;
 import com.ifood.domain.loggerError.WeatherError;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpClientErrorException;
 
 @Controller
 @RequestMapping(path = "/weather")
@@ -46,14 +44,10 @@ public class WeatherController {
             CityWeather cityWeather = this.weatherService.GetCityWeather(city);
             logger.info(String.format(LogInformation.consultingCityValue, city));
             return ResponseEntity.status(HttpStatus.OK).body(cityWeather);
-        }catch (HttpClientErrorException e){
-            logger.error(e.getResponseBodyAsString());
-            return ResponseEntity.status(e.getStatusCode())
-                    .body(new Gson().fromJson(e.getResponseBodyAsString(), WeatherError.class));
         }catch (Exception e){
-            logger.error(LogInformation.weatherServiceIsUnreachable);
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-                    .body(new WeatherError(HttpStatus.BAD_GATEWAY.value(), LogInformation.weatherServiceIsUnreachable));
+            logger.error(e.getLocalizedMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new WeatherError(HttpStatus.BAD_REQUEST.value(), e.getLocalizedMessage()));
         }
     }
 }

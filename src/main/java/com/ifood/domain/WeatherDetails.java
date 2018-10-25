@@ -7,16 +7,20 @@ public class WeatherDetails {
     private double humidity;
     private double temp_min;
     private double temp_max;
+    private double sea_level;
+    private double grnd_level;
 
     public WeatherDetails() {
     }
 
-    public WeatherDetails(double temp, double pressure, double humidity, double temp_min, double temp_max) {
+    public WeatherDetails(double temp, double pressure, double humidity, double temp_min, double temp_max, double sea_level, double grnd_level) {
         this.temp = temp;
         this.pressure = pressure;
         this.humidity = humidity;
         this.temp_min = temp_min;
         this.temp_max = temp_max;
+        this.sea_level = sea_level;
+        this.grnd_level = grnd_level;
     }
 
     public double getTemp() {
@@ -59,6 +63,22 @@ public class WeatherDetails {
         this.temp_max = temp_max;
     }
 
+    public double getSea_level() {
+        return sea_level;
+    }
+
+    public void setSea_level(double sea_level) {
+        this.sea_level = sea_level;
+    }
+
+    public double getGrnd_level() {
+        return grnd_level;
+    }
+
+    public void setGrnd_level(double grnd_level) {
+        this.grnd_level = grnd_level;
+    }
+
     @Override
     public String toString() {
         return "WeatherDetails{" +
@@ -67,6 +87,8 @@ public class WeatherDetails {
                 ", humidity=" + humidity +
                 ", temp_min=" + temp_min +
                 ", temp_max=" + temp_max +
+                ", sea_level=" + sea_level +
+                ", grnd_level=" + grnd_level +
                 '}';
     }
 }
